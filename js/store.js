@@ -38,23 +38,42 @@ async function addStudent(data) {
   return student;
 }
 
-function updateStudent(id, data) {
-  let students = getStudents();
-  const idx = students.findIndex(s => s.id === id);
-  if (idx === -1) throw new Error("Student not found.");
-  students[idx] = { ...students[idx], ...data };
-  saveStudents(students);
-  return students[idx];
+async function updateStudent(id, data) {
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      action: "update",
+      id: id,
+      ...data
+    })
+  });
+
+  return await res.json();
 }
 
-function deleteStudent(id) {
-  let students = getStudents();
-  students = students.filter(s => s.id !== id);
-  saveStudents(students);
+async function deleteStudent(id) {
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      action: "delete",
+      id: id
+    })
+  });
+
+  return await res.json();
 }
 
-function findStudentByStudentId(studentId) {
-  return getStudents().find(s => s.studentId === studentId) || null;
+async function findStudentByStudentId(studentId) {
+  const students = await getStudents();
+  return students.find(s => s.studentId === studentId) || null;
 }
 
 // ── SESSION ──────────────────────────────────────────

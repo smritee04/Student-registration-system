@@ -200,12 +200,9 @@
     submitBtn.innerHTML = `<span class="spinner" style="width:15px;height:15px;border-width:2px;display:inline-block"></span> Creating account…`;
 
     try {
-      // Remove confirmPassword before saving
+      
       const { confirmPassword, ...studentData } = d;
-       console.log("Before save");
-
       await addStudent(studentData);
-      console.log("After save");
       form.style.display = "none";
       successMsg.style.display = "block";
     } catch (err) {

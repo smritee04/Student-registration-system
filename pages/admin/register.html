@@ -140,7 +140,7 @@
       gender:     { required: true, label: "Gender" },
     };
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!validateForm(form, rules)) return;
 
@@ -153,7 +153,7 @@
       data.password = data.studentId;
 
       try {
-        addStudent(data);
+        await addStudent(data);
         showToast(`${data.fullName} registered successfully! Default password: ${data.studentId}`, "success");
         form.reset();
       } catch (err) {
