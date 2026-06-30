@@ -175,7 +175,7 @@
     errorMsg.style.display = "none";
   }
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     clearErrors();
 
@@ -202,7 +202,10 @@
     try {
       // Remove confirmPassword before saving
       const { confirmPassword, ...studentData } = d;
-      addStudent(studentData);
+       console.log("Before save");
+
+      await addStudent(studentData);
+      console.log("After save");
       form.style.display = "none";
       successMsg.style.display = "block";
     } catch (err) {

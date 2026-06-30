@@ -2,29 +2,39 @@
    store.js — localStorage-backed data store
    All student data persists across page loads.
 ===================================================== */
-
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbyt0kdOEXeiwL4zj6bCfdmqA-qiUikKOfqxvuh5N9Y9rDzvrNkPiCougtY8vOs23R6j/exec";
 const STUDENTS_KEY = "sreg_students";
 const SESSION_KEY  = "sreg_user";
 
 // ── STUDENTS ──────────────────────────────────────────
-function getStudents() {
-  try { return JSON.parse(localStorage.getItem(STUDENTS_KEY)) || []; }
-  catch { return []; }
+async function getStudents() {
+  const res = await fetch(API_URL);
+  return await res.json();
 }
 
 function saveStudents(arr) {
   localStorage.setItem(STUDENTS_KEY, JSON.stringify(arr));
 }
 
-function addStudent(data) {
-  const students = getStudents();
-  // Check duplicate Student ID
+async function addStudent(data) {
+  const students = await getStudents();
+
   if (students.find(s => s.studentId === data.studentId)) {
     throw new Error("Student ID already exists.");
   }
-  const student = { id: "stu_" + Date.now(), ...data, createdAt: new Date().toISOString() };
-  students.push(student);
-  saveStudents(students);
+
+  const student = {
+    id: "stu_" + Date.now(),
+    ...data,
+    createdAt: new Date().toISOString()
+  };
+
+ await fetch(API_URL, {
+  method: "POST",
+  body: JSON.stringify(student)
+});
+
   return student;
 }
 
