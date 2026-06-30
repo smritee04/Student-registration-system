@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In — StudentReg</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- LEFT BRAND PANEL -->
+  <div class="auth-brand">
+    <div class="auth-brand-inner">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a3a6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div class="auth-logo-text">
+          <strong>StudentReg</strong>
+          <span>University Portal</span>
+        </div>
+      </div>
+
+      <h1>Student Registration &amp; Management System</h1>
+      <div class="auth-divider"></div>
+      <p>A secure portal for managing student records, registrations, and academic information across all departments.</p>
+
+      <div class="auth-stats">
+        <div class="auth-stat">
+          <div class="auth-stat-num" id="totalCount">0</div>
+          <div class="auth-stat-label">Registered Students</div>
+        </div>
+        <div class="auth-stat">
+          <div class="auth-stat-num">8</div>
+          <div class="auth-stat-label">Departments</div>
+        </div>
+        <div class="auth-stat">
+          <div class="auth-stat-num">4</div>
+          <div class="auth-stat-label">Academic Years</div>
+        </div>
+        <div class="auth-stat">
+          <div class="auth-stat-num">2</div>
+          <div class="auth-stat-label">Access Roles</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT LOGIN FORM -->
+  <div class="auth-form-panel">
+    <div class="auth-form-box">
+
+      <h2>Welcome Back</h2>
+      <p class="auth-sub">Sign in to access your portal</p>
+
+      <!-- Role tabs -->
+      <div class="role-tabs">
+        <button class="role-tab active" id="tabAdmin">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Admin
+        </button>
+        <button class="role-tab" id="tabStudent">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Student
+        </button>
+      </div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label id="userLabel">Email Address</label>
+          <div class="input-icon-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="email" id="username" placeholder="admin@university.edu" required/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-icon-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="password" placeholder="••••••••" required/>
+          </div>
+        </div>
+
+        <div id="loginError" style="display:none; background:var(--clr-danger-bg); color:var(--clr-danger); border:1px solid #f5c6c2; border-radius:var(--radius-sm); padding:.65rem .85rem; font-size:.84rem; margin-bottom:.5rem;"></div>
+
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:.5rem; padding:.75rem">
+          Sign In
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </form>
+
+      <!-- Register link — shown only for student tab -->
+      <div id="registerLink" style="display:none; margin-top:1rem; text-align:center; font-size:.85rem; color:var(--clr-text-2)">
+        New student?
+        <a href="pages/student/signup.html" style="color:var(--clr-primary); font-weight:600">Register here</a>
+      </div>
+
+      <p id="loginHint" style="margin-top:1.25rem; font-size:.78rem; color:var(--clr-muted); background:var(--clr-bg); padding:.65rem .85rem; border-radius:var(--radius-sm); border:1px solid var(--clr-border); line-height:1.5">
+     
+      </p>
+
+      <p style="margin-top:1.5rem; font-size:.78rem; color:var(--clr-muted); text-align:center">
+        &copy; 2025 StudentReg University Portal. All rights reserved.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/store.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  // Update live count
+  document.getElementById("totalCount").textContent = getStudents().length;
+</script>
+</body>
+</html>

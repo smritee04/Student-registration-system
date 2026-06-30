@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Registration — StudentReg</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/style.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebar-placeholder"></div>
+  <div class="main-area">
+    <div id="topbar-placeholder"></div>
+
+    <main class="page-content" style="max-width:780px">
+
+      <!-- Already registered view -->
+      <div id="registeredView" style="display:none">
+        <div style="margin-bottom:1.25rem;padding:1rem 1.25rem;background:var(--clr-success-bg);border:1px solid #a7f3d0;border-radius:var(--radius-md);font-size:.875rem;color:var(--clr-success)">
+          <strong>✓ You are registered.</strong> Your details are on file. Contact admin to make changes.
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h2>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Your Registration Details
+            </h2>
+            <span class="badge badge-green">Registered</span>
+          </div>
+          <div class="card-body">
+            <div class="info-grid" id="registeredInfo"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Not yet registered — this shouldn't normally show since students register before logging in -->
+      <div id="notRegisteredView" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <h2>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+              Submit Registration
+            </h2>
+          </div>
+          <div class="card-body">
+
+            <div style="background:var(--clr-bg);border:1px solid var(--clr-border);border-radius:var(--radius-md);padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.85rem;color:var(--clr-text-2)">
+              <strong>Note:</strong> Your account exists but we have no registration details on file. Please fill in the form below.
+            </div>
+
+            <form id="studentRegForm" novalidate>
+              <div class="form-grid">
+                <div class="form-section-title">Your Information</div>
+
+                <div class="form-group">
+                  <label>Student ID <span style="color:var(--clr-danger)">*</span></label>
+                  <input type="text" name="studentId" id="studentId" placeholder="e.g. CS2024001" readonly style="background:var(--clr-bg)"/>
+                  <span class="field-error" data-error="studentId"></span>
+                </div>
+
+                <div class="form-group">
+                  <label>Full Name <span style="color:var(--clr-danger)">*</span></label>
+                  <input type="text" name="fullName" placeholder="As per your ID card"/>
+                  <span class="field-error" data-error="fullName"></span>
+                </div>
+
+                <div class="form-group">
+                  <label>Email Address <span style="color:var(--clr-danger)">*</span></label>
+                  <input type="email" name="email" placeholder="your@college.edu"/>
+                  <span class="field-error" data-error="email"></span>
+                </div>
+
+                <div class="form-group">
+                  <label>Phone Number <span style="color:var(--clr-danger)">*</span></label>
+                  <input type="tel" name="phone" placeholder="+91 98765 43210"/>
+                  <span class="field-error" data-error="phone"></span>
+                </div>
+
+                <div class="form-section-title">Academic Details</div>
+
+                <div class="form-group">
+                  <label>Department <span style="color:var(--clr-danger)">*</span></label>
+                  <select name="department">
+                    <option value="">— Select Department —</option>
+                    <option>Computer Science</option>
+                    <option>Information Technology</option>
+                    <option>Electronics</option>
+                    <option>Mechanical</option>
+                    <option>Civil</option>
+                    <option>Electrical</option>
+                    <option>MBA</option>
+                    <option>MCA</option>
+                  </select>
+                  <span class="field-error" data-error="department"></span>
+                </div>
+
+                <div class="form-group">
+                  <label>Academic Year <span style="color:var(--clr-danger)">*</span></label>
+                  <select name="year">
+                    <option value="">— Select Year —</option>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    <option value="4">4th Year</option>
+                  </select>
+                  <span class="field-error" data-error="year"></span>
+                </div>
+
+                <div class="form-group">
+                  <label>Gender <span style="color:var(--clr-danger)">*</span></label>
+                  <select name="gender">
+                    <option value="">— Select Gender —</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                  </select>
+                  <span class="field-error" data-error="gender"></span>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                  Submit Registration
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="../../js/store.js"></script>
+<script src="../../js/auth.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = requireAuth("student");
+    if (!user) return;
+    injectLayout("student", "My Registration");
+
+    const s = findStudentByStudentId(user.studentId);
+    const yearLabels = { "1": "1st Year", "2": "2nd Year", "3": "3rd Year", "4": "4th Year" };
+
+    if (s) {
+      document.getElementById("registeredView").style.display = "block";
+      document.getElementById("registeredInfo").innerHTML = `
+        <div class="info-item"><div class="info-item-label">Student ID</div><div class="info-item-value" style="font-family:monospace">${esc(s.studentId)}</div></div>
+        <div class="info-item"><div class="info-item-label">Full Name</div><div class="info-item-value">${esc(s.fullName)}</div></div>
+        <div class="info-item"><div class="info-item-label">Email</div><div class="info-item-value">${esc(s.email)}</div></div>
+        <div class="info-item"><div class="info-item-label">Phone</div><div class="info-item-value">${esc(s.phone)}</div></div>
+        <div class="info-item"><div class="info-item-label">Department</div><div class="info-item-value">${esc(s.department)}</div></div>
+        <div class="info-item"><div class="info-item-label">Year</div><div class="info-item-value">${yearLabels[s.year] || s.year}</div></div>
+        <div class="info-item"><div class="info-item-label">Gender</div><div class="info-item-value">${esc(s.gender)}</div></div>
+        <div class="info-item"><div class="info-item-label">Registered On</div><div class="info-item-value">${formatDate(s.createdAt)}</div></div>
+      `;
+    } else {
+      // Fallback: show a form so they can complete registration
+      document.getElementById("notRegisteredView").style.display = "block";
+      const sidInput = document.getElementById("studentId");
+      if (sidInput && user.studentId) sidInput.value = user.studentId;
+
+      const form      = document.getElementById("studentRegForm");
+      const submitBtn = document.getElementById("submitBtn");
+
+      const rules = {
+        studentId:  { required: true, label: "Student ID" },
+        fullName:   { required: true, label: "Full Name" },
+        email:      { required: true, email: true, label: "Email" },
+        phone:      { required: true, label: "Phone" },
+        department: { required: true, label: "Department" },
+        year:       { required: true, label: "Year" },
+        gender:     { required: true, label: "Gender" },
+      };
+
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+        if (!validateForm(form, rules)) return;
+
+        const orig = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="spinner" style="width:15px;height:15px;border-width:2px;display:inline-block"></span> Submitting…`;
+
+        const data = Object.fromEntries(new FormData(form).entries());
+        data.password = data.studentId; // default password
+
+        try {
+          addStudent(data);
+          showToast("Registration submitted successfully!", "success");
+          setTimeout(() => location.reload(), 1000);
+        } catch (err) {
+          showToast(err.message || "Submission failed.", "error");
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = orig;
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>

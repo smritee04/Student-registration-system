@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register Student — StudentReg Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/style.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebar-placeholder"></div>
+  <div class="main-area">
+    <div id="topbar-placeholder"></div>
+
+    <main class="page-content" style="max-width:780px">
+      <div class="card">
+        <div class="card-header">
+          <h2>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Register New Student
+          </h2>
+          <a href="students.html" class="btn btn-secondary btn-sm">← All Students</a>
+        </div>
+        <div class="card-body">
+
+          <div style="background:var(--clr-info-bg);border:1px solid #bfdbfe;border-radius:var(--radius-md);padding:.85rem 1.1rem;margin-bottom:1.5rem;font-size:.84rem;color:var(--clr-info)">
+            <strong>Admin Note:</strong> You are registering a student directly. The student will receive a default password equal to their Student ID. They can use it to log in.
+          </div>
+
+          <form id="registerForm" novalidate>
+            <div class="form-grid">
+              <div class="form-section-title">Personal Information</div>
+
+              <div class="form-group">
+                <label>Student ID <span style="color:var(--clr-danger)">*</span></label>
+                <input type="text" name="studentId" placeholder="e.g. CS2024001"/>
+                <span class="field-error" data-error="studentId"></span>
+              </div>
+
+              <div class="form-group">
+                <label>Full Name <span style="color:var(--clr-danger)">*</span></label>
+                <input type="text" name="fullName" placeholder="e.g. Priya Sharma"/>
+                <span class="field-error" data-error="fullName"></span>
+              </div>
+
+              <div class="form-group">
+                <label>Email Address <span style="color:var(--clr-danger)">*</span></label>
+                <input type="email" name="email" placeholder="priya@college.edu"/>
+                <span class="field-error" data-error="email"></span>
+              </div>
+
+              <div class="form-group">
+                <label>Phone Number <span style="color:var(--clr-danger)">*</span></label>
+                <input type="tel" name="phone" placeholder="+91 98765 43210"/>
+                <span class="field-error" data-error="phone"></span>
+              </div>
+
+              <div class="form-section-title">Academic Information</div>
+
+              <div class="form-group">
+                <label>Department <span style="color:var(--clr-danger)">*</span></label>
+                <select name="department">
+                  <option value="">— Select Department —</option>
+                  <option>Computer Science</option>
+                  <option>Information Technology</option>
+                  <option>Electronics</option>
+                  <option>Mechanical</option>
+                  <option>Civil</option>
+                  <option>Electrical</option>
+                  <option>MBA</option>
+                  <option>MCA</option>
+                </select>
+                <span class="field-error" data-error="department"></span>
+              </div>
+
+              <div class="form-group">
+                <label>Academic Year <span style="color:var(--clr-danger)">*</span></label>
+                <select name="year">
+                  <option value="">— Select Year —</option>
+                  <option value="1">1st Year</option>
+                  <option value="2">2nd Year</option>
+                  <option value="3">3rd Year</option>
+                  <option value="4">4th Year</option>
+                </select>
+                <span class="field-error" data-error="year"></span>
+              </div>
+
+              <div class="form-group">
+                <label>Gender <span style="color:var(--clr-danger)">*</span></label>
+                <select name="gender">
+                  <option value="">— Select Gender —</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+                <span class="field-error" data-error="gender"></span>
+              </div>
+
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="submitBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Register Student
+              </button>
+              <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../../js/store.js"></script>
+<script src="../../js/auth.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = requireAuth("admin");
+    if (!user) return;
+    injectLayout("admin", "Register Student");
+
+    const form      = document.getElementById("registerForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const resetBtn  = document.getElementById("resetBtn");
+
+    const rules = {
+      studentId:  { required: true, label: "Student ID" },
+      fullName:   { required: true, label: "Full Name" },
+      email:      { required: true, email: true, label: "Email" },
+      phone:      { required: true, label: "Phone" },
+      department: { required: true, label: "Department" },
+      year:       { required: true, label: "Year" },
+      gender:     { required: true, label: "Gender" },
+    };
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!validateForm(form, rules)) return;
+
+      const orig = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="spinner" style="width:15px;height:15px;border-width:2px;display:inline-block"></span> Registering…`;
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      // Default password = studentId (admin-registered students)
+      data.password = data.studentId;
+
+      try {
+        addStudent(data);
+        showToast(`${data.fullName} registered successfully! Default password: ${data.studentId}`, "success");
+        form.reset();
+      } catch (err) {
+        showToast(err.message || "Registration failed.", "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = orig;
+      }
+    });
+
+    resetBtn.addEventListener("click", () => form.reset());
+  });
+</script>
+</body>
+</html>

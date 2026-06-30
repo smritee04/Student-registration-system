@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile — StudentReg</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/style.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebar-placeholder"></div>
+  <div class="main-area">
+    <div id="topbar-placeholder"></div>
+
+    <main class="page-content" style="max-width:820px">
+      <div id="profileContent">
+        <div class="spinner-wrap"><div class="spinner"></div></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="../../js/store.js"></script>
+<script src="../../js/auth.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = requireAuth("student");
+    if (!user) return;
+    injectLayout("student", "My Profile");
+
+    const container = document.getElementById("profileContent");
+    const s = findStudentByStudentId(user.studentId);
+
+    if (!s) {
+      container.innerHTML = `
+        <div class="card"><div class="card-body">
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <h3>Profile not found</h3>
+            <p>No registration record found. Please contact the admin.</p>
+          </div>
+        </div></div>`;
+      return;
+    }
+
+    const yearLabel = { "1": "1st Year", "2": "2nd Year", "3": "3rd Year", "4": "4th Year" }[s.year] || s.year;
+
+    container.innerHTML = `
+      <div class="profile-header">
+        <div class="profile-avatar-lg">${(s.fullName || "S").charAt(0).toUpperCase()}</div>
+        <div class="profile-info">
+          <h2>${esc(s.fullName)}</h2>
+          <p>${esc(s.studentId)} &nbsp;·&nbsp; ${esc(s.department)} &nbsp;·&nbsp; ${yearLabel}</p>
+          <p style="margin-top:.35rem;opacity:.7;font-size:.83rem">${esc(s.email)}</p>
+        </div>
+        <div class="profile-badge">Enrolled</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Registration Details
+          </h2>
+          <span class="badge badge-green">Active</span>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div class="info-item"><div class="info-item-label">Student ID</div><div class="info-item-value" style="font-family:monospace">${esc(s.studentId)}</div></div>
+            <div class="info-item"><div class="info-item-label">Full Name</div><div class="info-item-value">${esc(s.fullName)}</div></div>
+            <div class="info-item"><div class="info-item-label">Email Address</div><div class="info-item-value">${esc(s.email)}</div></div>
+            <div class="info-item"><div class="info-item-label">Phone Number</div><div class="info-item-value">${esc(s.phone)}</div></div>
+            <div class="info-item"><div class="info-item-label">Department</div><div class="info-item-value">${esc(s.department)}</div></div>
+            <div class="info-item"><div class="info-item-label">Academic Year</div><div class="info-item-value">${yearLabel}</div></div>
+            <div class="info-item"><div class="info-item-label">Gender</div><div class="info-item-value">${esc(s.gender)}</div></div>
+            <div class="info-item"><div class="info-item-label">Registered On</div><div class="info-item-value">${formatDate(s.createdAt)}</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem;padding:1rem 1.25rem;background:var(--clr-info-bg);border:1px solid #bee3f8;border-radius:var(--radius-md);font-size:.85rem;color:var(--clr-info)">
+        <strong>Need to update your details?</strong> Please contact your department administrator.
+      </div>
+    `;
+  });
+</script>
+</body>
+</html>

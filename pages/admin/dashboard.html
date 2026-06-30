@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — StudentReg</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../css/style.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <div id="sidebar-placeholder"></div>
+  <div class="main-area">
+    <div id="topbar-placeholder"></div>
+
+    <main class="page-content">
+
+      <!-- STATS ROW -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="statTotal">—</div>
+            <div class="stat-label">Total Students</div>
+          </div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="statDepts">—</div>
+            <div class="stat-label">Departments</div>
+          </div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="statFemale">—</div>
+            <div class="stat-label">Female Students</div>
+          </div>
+        </div>
+        <div class="stat-card info">
+          <div class="stat-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="statYear1">—</div>
+            <div class="stat-label">1st Year Students</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECENT STUDENTS TABLE -->
+      <div class="card">
+        <div class="card-header">
+          <h2>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Recently Registered Students
+          </h2>
+          <a href="students.html" class="btn btn-secondary btn-sm">View All</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Full Name</th>
+                <th>Department</th>
+                <th>Year</th>
+                <th>Registered</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="recentTbody">
+              <tr><td colspan="6"><div class="spinner-wrap"><div class="spinner"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="../../js/store.js"></script>
+<script src="../../js/auth.js"></script>
+<script src="../../js/sidebar.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = requireAuth("admin");
+    if (!user) return;
+    injectLayout("admin", "Dashboard");
+
+    const students = getStudents();
+
+    document.getElementById("statTotal").textContent  = students.length;
+    document.getElementById("statDepts").textContent  = new Set(students.map(s => s.department).filter(Boolean)).size || 0;
+    document.getElementById("statFemale").textContent = students.filter(s => s.gender === "Female").length;
+    document.getElementById("statYear1").textContent  = students.filter(s => s.year === "1").length;
+
+    const tbody  = document.getElementById("recentTbody");
+    const recent = [...students].reverse().slice(0, 5);
+
+    if (!recent.length) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><p>No students registered yet. <a href="/pages/admin/register.html">Register the first student</a>.</p></div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = recent.map(s => `
+      <tr>
+        <td><code style="font-family:monospace;font-size:.82rem">${esc(s.studentId)}</code></td>
+        <td><strong>${esc(s.fullName)}</strong></td>
+        <td><span class="badge badge-blue">${esc(s.department)}</span></td>
+        <td>${yearBadge(s.year)}</td>
+        <td style="font-size:.8rem;color:var(--clr-muted)">${formatDate(s.createdAt)}</td>
+        <td><a href="students.html" class="btn btn-secondary btn-sm">Manage</a></td>
+      </tr>`).join("");
+  });
+</script>
+</body>
+</html>
