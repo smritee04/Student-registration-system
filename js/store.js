@@ -40,17 +40,14 @@ async function addStudent(data) {
 
 async function updateStudent(id, data) {
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      action: "update",
-      id: id,
-      ...data
-    })
-  });
+ const res = await fetch(API_URL, {
+  method: "POST",
+  body: JSON.stringify({
+    action: "update",
+    id: id,
+    ...data
+  })
+});
 
   return await res.json();
 }
@@ -59,9 +56,6 @@ async function deleteStudent(id) {
 
   const res = await fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
     body: JSON.stringify({
       action: "delete",
       id: id
