@@ -175,17 +175,17 @@
   let allStudents  = [];
   let deleteTarget = null;
 
-  document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const user = requireAuth("admin");
     if (!user) return;
     injectLayout("admin", "All Students");
-    loadStudents();
+    await loadStudents();
     initSearch();
     initModals();
   });
 
-  function loadStudents() {
-    allStudents = getStudents();
+  async function loadStudents() {
+    allStudents = await getStudents();
     renderTable(allStudents);
   }
 
@@ -271,7 +271,7 @@
     document.getElementById("editCancelBtn")?.addEventListener("click",   () => closeModal("editModal"));
     document.getElementById("editModal")?.addEventListener("click", e => { if (e.target.id === "editModal") closeModal("editModal"); });
 
-    document.getElementById("editSaveBtn")?.addEventListener("click", () => {
+    document.getElementById("editSaveBtn")?.addEventListener("click", async () => {
       const btn = document.getElementById("editSaveBtn");
       btn.disabled = true; btn.textContent = "Saving…";
 
@@ -287,11 +287,11 @@
       };
       if (newPass) payload.password = newPass;
 
-      try {
-        updateStudent(id, payload);
+    try {
+        await updateStudent(id, payload);
         showToast("Student record updated.", "success");
         closeModal("editModal");
-        loadStudents();
+        await loadStudents();
       } catch (err) {
         showToast(err.message || "Update failed.", "error");
       } finally {
@@ -303,14 +303,14 @@
     document.getElementById("deleteCancelBtn")?.addEventListener("click",  () => closeModal("deleteModal"));
     document.getElementById("deleteModal")?.addEventListener("click", e => { if (e.target.id === "deleteModal") closeModal("deleteModal"); });
 
-    document.getElementById("deleteConfirmBtn")?.addEventListener("click", () => {
+   document.getElementById("deleteConfirmBtn")?.addEventListener("click", async () => {
       const btn = document.getElementById("deleteConfirmBtn");
       btn.disabled = true; btn.textContent = "Deleting…";
-      try {
-        deleteStudent(deleteTarget);
+     try {
+        await deleteStudent(deleteTarget);
         showToast("Student deleted.", "success");
         closeModal("deleteModal");
-        loadStudents();
+        await loadStudents();
       } catch (err) {
         showToast(err.message || "Delete failed.", "error");
       } finally {

@@ -94,12 +94,12 @@
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/app.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", async () => {
     const user = requireAuth("admin");
     if (!user) return;
     injectLayout("admin", "Dashboard");
 
-    const students = getStudents();
+    const students = await getStudents();
 
     document.getElementById("statTotal").textContent  = students.length;
     document.getElementById("statDepts").textContent  = new Set(students.map(s => s.department).filter(Boolean)).size || 0;

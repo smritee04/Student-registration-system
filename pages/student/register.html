@@ -141,12 +141,12 @@
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/app.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const user = requireAuth("student");
     if (!user) return;
     injectLayout("student", "My Registration");
 
-    const s = findStudentByStudentId(user.studentId);
+    const s = await findStudentByStudentId(user.studentId);
     const yearLabels = { "1": "1st Year", "2": "2nd Year", "3": "3rd Year", "4": "4th Year" };
 
     if (s) {
@@ -180,7 +180,7 @@
         gender:     { required: true, label: "Gender" },
       };
 
-      form.addEventListener("submit", e => {
+    form.addEventListener("submit", async e => {
         e.preventDefault();
         if (!validateForm(form, rules)) return;
 
@@ -192,7 +192,7 @@
         data.password = data.studentId; // default password
 
         try {
-          addStudent(data);
+          await addStudent(data);
           showToast("Registration submitted successfully!", "success");
           setTimeout(() => location.reload(), 1000);
         } catch (err) {

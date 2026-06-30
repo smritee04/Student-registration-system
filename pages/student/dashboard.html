@@ -83,12 +83,12 @@
 <script src="../../js/sidebar.js"></script>
 <script src="../../js/app.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+ document.addEventListener("DOMContentLoaded", async () => {
     const user = requireAuth("student");
     if (!user) return;
     injectLayout("student", "My Dashboard");
 
-    const s = findStudentByStudentId(user.studentId);
+    const s = await findStudentByStudentId(user.studentId);
 
     if (!s) {
       document.getElementById("studentWelcome").textContent  = `Welcome, ${user.name || user.studentId}`;

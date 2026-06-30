@@ -17,8 +17,9 @@ function initLoginPage() {
   if (existing) { redirectByRole(existing.role); return; }
 
   // Show live student count
+  // Show live student count
   const countEl = document.getElementById("totalCount");
-  if (countEl) countEl.textContent = getStudents().length;
+  if (countEl) getStudents().then(list => countEl.textContent = list.length);
 
   let activeRole = "admin";
 
@@ -75,7 +76,7 @@ function initLoginPage() {
         setSession({ role: "admin", name: "Administrator", email: username });
         redirectByRole("admin");
       } else {
-        const student = findStudentByStudentId(username);
+        const student =  await findStudentByStudentId(username);
         if (!student) throw new Error("Student ID not found. Please register first.");
         if (password !== student.password) throw new Error("Incorrect password.");
         setSession({ role: "student", name: student.fullName, studentId: student.studentId, id: student.id });
