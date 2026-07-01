@@ -40,7 +40,7 @@ function initLoginPage() {
       userLabel.textContent = "Email Address";
       userInput.placeholder = "admin@university.edu";
       userInput.type = "email";
-      if (hint) hint.innerHTML = 'Default credentials: ';
+      if (hint) hint.textContent = 'Administrator Login';
       if (registerLink) registerLink.style.display = "none";
     } else {
       userLabel.textContent = "Student ID";
@@ -69,10 +69,20 @@ function initLoginPage() {
 
     try {
       if (activeRole === "admin") {
-        const creds = getAdminCredentials();
-        if (username !== creds.email || password !== creds.password) {
-          throw new Error("Invalid email or password.");
-        }
+      const response = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+        action: "adminLogin",
+       email: username,
+       password: password
+  })
+});
+
+const result = await response.json();
+
+if (!result.success) {
+  throw new Error("Invalid email or password.");
+}
         setSession({ role: "admin", name: "Administrator", email: username });
         redirectByRole("admin");
       } else {

@@ -109,20 +109,3 @@ function redirectByRole(role) {
   }
 }
 
-// ── ADMIN AUTH ───────────────────────────────────────
-// Admin credentials stored in localStorage so admin can be changed
-const ADMIN_KEY = "sreg_admin";
-
-function getAdminCredentials() {
-  try { return JSON.parse(localStorage.getItem(ADMIN_KEY)); }
-  catch { return null; }
-}
-
-function initDefaultAdmin() {
-  if (!getAdminCredentials()) {
-    localStorage.setItem(ADMIN_KEY, JSON.stringify({ email: "admin@university.edu", password: "admin123" }));
-  }
-}
-
-// Run on load
-initDefaultAdmin();
