@@ -34,7 +34,7 @@
           </div>
           <div>
             <div class="stat-num" id="statDepts">—</div>
-            <div class="stat-label">Departments</div>
+            <div class="stat-label">Active Departments</div>
           </div>
         </div>
         <div class="stat-card success">
@@ -104,13 +104,13 @@
     document.getElementById("statTotal").textContent  = students.length;
     document.getElementById("statDepts").textContent  = new Set(students.map(s => s.department).filter(Boolean)).size || 0;
     document.getElementById("statFemale").textContent = students.filter(s => s.gender === "Female").length;
-    document.getElementById("statYear1").textContent  = students.filter(s => s.year === "1").length;
+    document.getElementById("statYear1").textContent  = students.filter(s => String(s.year) === "1").length;
 
     const tbody  = document.getElementById("recentTbody");
     const recent = [...students].reverse().slice(0, 5);
 
     if (!recent.length) {
-      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><p>No students registered yet. <a href="/pages/admin/register.html">Register the first student</a>.</p></div></td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><p>No students registered yet. <a href="register.html">Register the first student</a>.</p></div></td></tr>`;
       return;
     }
 

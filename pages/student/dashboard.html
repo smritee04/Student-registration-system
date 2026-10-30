@@ -96,7 +96,7 @@
       document.getElementById("studentInfoGrid").innerHTML   = `
         <p style="color:var(--clr-muted)">
           No registration record found. Please contact your administrator or
-          <a href="/pages/student/register.html">complete your registration</a>.
+          <a href="register.html">complete your registration</a>.
         </p>`;
       return;
     }
@@ -111,7 +111,9 @@
 
     const yearLabels = { "1": "1st Year", "2": "2nd Year", "3": "3rd Year", "4": "4th Year" };
     document.getElementById("sdYear").textContent = yearLabels[s.year] || s.year;
-    document.getElementById("sdDept").textContent = s.department?.split(" ")[0] || "—";
+    const sdDept = document.getElementById("sdDept");
+    sdDept.textContent = s.department || "—";
+    sdDept.style.fontSize = "1.35rem";
 
     document.getElementById("studentInfoGrid").innerHTML = `
       <div class="info-item"><div class="info-item-label">Student ID</div><div class="info-item-value">${esc(s.studentId)}</div></div>

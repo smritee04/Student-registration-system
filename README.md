@@ -1,5 +1,7 @@
 # StudentReg — University Student Registration Portal
 
+**Live demo:** https://smritee04.github.io/Student-registration-system/
+
 A student registration and management system built with HTML, CSS, and JavaScript. The project provides separate dashboards for administrators and students, enabling registration, profile management, and student record administration through a responsive web interface.
 
 ---
@@ -12,7 +14,7 @@ studentreg/
 ├── css/
 │   └── style.css                 # Full design system
 ├── js/
-│   ├── store.js                  # Data layer — localStorage CRUD
+│   ├── store.js                  # Data layer — Google Apps Script API + session
 │   ├── auth.js                   # Login page logic
 │   ├── app.js                    # Shared utilities (toast, badges, etc.)
 │   └── sidebar.js                # Sidebar + topbar injection
@@ -37,7 +39,7 @@ No build step, no server required. Just open the files in a browser.
 **Option 1 — Direct open:**
 Double-click `index.html` to open it in your browser.
 
-> ⚠ Some browsers block `localStorage` on `file://` URLs. If login doesn't work, use Option 2.
+> ⚠ Some browsers restrict `localStorage` and network requests on `file://` URLs. If login doesn't work, use Option 2.
 
 **Option 2 — Local server (recommended):**
 
@@ -56,7 +58,10 @@ npx serve .
 
 ---
 
-## Default Credentials
+## Credentials
+
+### Admin
+Admin login is verified by the Google Apps Script backend. Credentials are not stored in this repository; set them in your own Apps Script project.
 
 ### Students
 Students must register first via the **"Register here"** link on the login page. After registering, they log in with their **Student ID** and the **password they set**.
@@ -85,7 +90,7 @@ If a student is added by the admin (via Register Student), their default passwor
 ## Features
 
 - **Role-based access** — Admin and Student roles with separate dashboards and page guards
-- **Persistent data** — Student records are maintained across user sessions
+- **Persistent data** — Student records are stored centrally in Google Sheets
 - **Student self-registration** — Public signup page, no login required
 - **Admin student management** — Add, edit, delete with modal confirmations
 - **Live search** — Filter students instantly on the All Students page
@@ -97,15 +102,17 @@ If a student is added by the admin (via Register Student), their default passwor
 
 ---
 
-## Data Storage
+## Architecture & Data Storage
 
-All data is stored in the browser's `localStorage` under two keys:
+```text
+GitHub Pages (HTML / CSS / JavaScript)
+      ↓  fetch()
+Google Apps Script web app (API)
+      ↓
+Google Sheets (database)
+```
 
-| Key              | Contents                                   |
-|------------------|--------------------------------------------|
-| `sreg_students`  | JSON array of all student records          |
-| `sreg_user`      | Currently logged-in user's session object  |
-| `sreg_admin`     | Admin email + password                     |
+Student records are stored in Google Sheets and accessed through a Google Apps Script web app (`API_URL` in `js/store.js`). The browser's `localStorage` is used only to keep the logged-in session (`sreg_user`).
 
 Each student record contains:
 ```json
@@ -118,12 +125,12 @@ Each student record contains:
   "department": "Computer Science",
   "year": "2",
   "gender": "Female",
-  "password": "hashed_or_plain",
+  "password": "...",
   "createdAt": "2025-06-29T07:00:00.000Z"
 }
 ```
 
-> **Note:** The current version uses browser Local Storage for demonstration purposes. Future versions may integrate Google Sheets and Google Apps Script for centralized data management.
+> **Note:** This is a learning/demo project. Student passwords are currently stored as plain text in the sheet and student login is checked in the browser. For real use, hash passwords and move authentication into the Apps Script backend.
 
 ---
 
@@ -140,22 +147,11 @@ Each student record contains:
 
 ---
 
-## Future Backend Integration
+## Possible Improvements
 
-The project can be upgraded to use Google Sheets as a database and Google Apps Script as an API layer for centralized data storage and public deployment.
----
-
-## Planned Deployment
-
-```text
-GitHub Pages
-      ↓
-Google Apps Script API
-      ↓
-Google Sheets Database
-```
-
-This architecture will allow the application to be publicly accessible while storing student records in a centralized database.
+- Hash passwords and verify student login server-side in Apps Script
+- Stop returning passwords from the students endpoint
+- Add pagination for large student lists
 
 ## Browser Support
 

@@ -1,20 +1,16 @@
 /* =====================================================
-   store.js — localStorage-backed data store
-   All student data persists across page loads.
+   store.js — Data layer
+   Student data lives in Google Sheets via a Google Apps Script
+   web app (API_URL). Only the login session uses localStorage.
 ===================================================== */
 const API_URL =
   "https://script.google.com/macros/s/AKfycbyt0kdOEXeiwL4zj6bCfdmqA-qiUikKOfqxvuh5N9Y9rDzvrNkPiCougtY8vOs23R6j/exec";
-const STUDENTS_KEY = "sreg_students";
 const SESSION_KEY  = "sreg_user";
 
 // ── STUDENTS ──────────────────────────────────────────
 async function getStudents() {
   const res = await fetch(API_URL);
   return await res.json();
-}
-
-function saveStudents(arr) {
-  localStorage.setItem(STUDENTS_KEY, JSON.stringify(arr));
 }
 
 async function addStudent(data) {

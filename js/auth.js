@@ -17,9 +17,12 @@ function initLoginPage() {
   if (existing) { redirectByRole(existing.role); return; }
 
   // Show live student count
-  // Show live student count
   const countEl = document.getElementById("totalCount");
-  if (countEl) getStudents().then(list => countEl.textContent = list.length);
+  if (countEl) {
+    getStudents()
+      .then(list => countEl.textContent = list.length)
+      .catch(() => countEl.textContent = "—");
+  }
 
   let activeRole = "admin";
 

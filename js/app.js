@@ -82,7 +82,7 @@ function initLogout() {
   $$("[data-logout]").forEach(btn => {
     btn.addEventListener("click", () => {
       clearSession();
-      window.location.href = "/index.html";
+      window.location.href = "../../index.html";
     });
   });
 }

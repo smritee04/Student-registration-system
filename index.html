@@ -35,12 +35,12 @@
 
       <div class="auth-stats">
         <div class="auth-stat">
-          <div class="auth-stat-num" id="totalCount">0</div>
+          <div class="auth-stat-num" id="totalCount">—</div>
           <div class="auth-stat-label">Registered Students</div>
         </div>
         <div class="auth-stat">
           <div class="auth-stat-num">8</div>
-          <div class="auth-stat-label">Departments</div>
+          <div class="auth-stat-label">Departments Offered</div>
         </div>
         <div class="auth-stat">
           <div class="auth-stat-num">4</div>
@@ -118,11 +118,5 @@
 
 <script src="js/store.js"></script>
 <script src="js/auth.js"></script>
-<script>
-  // Update live count
-  getStudents().then(students => {
-  document.getElementById("totalCount").textContent = students.length;
-});
-</script>
 </body>
 </html>
