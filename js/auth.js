@@ -19,8 +19,8 @@ function initLoginPage() {
   // Show live student count
   const countEl = document.getElementById("totalCount");
   if (countEl) {
-    getStudents()
-      .then(list => countEl.textContent = list.length)
+    getStudentCount()
+      .then(count => countEl.textContent = count)
       .catch(() => countEl.textContent = "—");
   }
 
@@ -72,27 +72,13 @@ function initLoginPage() {
 
     try {
       if (activeRole === "admin") {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify({
-        action: "adminLogin",
-       email: username,
-       password: password
-  })
-});
-
-const result = await response.json();
-
-if (!result.success) {
-  throw new Error("Invalid email or password.");
-}
-        setSession({ role: "admin", name: "Administrator", email: username });
+        const result = await api("adminLogin", { email: username, password });
+        setSession({ role: "admin", name: "Administrator", email: username, token: result.token });
         redirectByRole("admin");
       } else {
-        const student =  await findStudentByStudentId(username);
-        if (!student) throw new Error("Student ID not found. Please register first.");
-        if (password !== student.password) throw new Error("Incorrect password.");
-        setSession({ role: "student", name: student.fullName, studentId: student.studentId, id: student.id });
+        const result = await api("studentLogin", { studentId: username, password });
+        const student = result.student;
+        setSession({ role: "student", name: student.fullName, studentId: student.studentId, id: student.id, token: result.token });
         redirectByRole("student");
       }
     } catch (err) {

@@ -11,6 +11,8 @@ A student registration and management system built with HTML, CSS, and JavaScrip
 ```
 studentreg/
 ├── index.html                    # Login page (Admin + Student)
+├── backend/
+│   └── Code.gs                   # Google Apps Script API (paste into your own project)
 ├── css/
 │   └── style.css                 # Full design system
 ├── js/
@@ -61,7 +63,7 @@ npx serve .
 ## Credentials
 
 ### Admin
-Admin login is verified by the Google Apps Script backend. Credentials are not stored in this repository; set them in your own Apps Script project.
+Admin login is verified by the Google Apps Script backend against an `Admin` sheet (email in column A, password in column B). No credentials are stored in this repository.
 
 ### Students
 Students must register first via the **"Register here"** link on the login page. After registering, they log in with their **Student ID** and the **password they set**.
@@ -130,7 +132,21 @@ Each student record contains:
 }
 ```
 
-> **Note:** This is a learning/demo project. Student passwords are currently stored as plain text in the sheet and student login is checked in the browser. For real use, hash passwords and move authentication into the Apps Script backend.
+### Security
+
+- Passwords are salted and hashed in the Apps Script backend and are never returned to the browser.
+- Student and admin login are verified server-side and return a session token (valid 6 hours).
+- Listing, editing and deleting students require an admin token; students can only read their own record.
+- Failed logins are throttled (5 attempts per 15 minutes).
+
+> **Note:** This is a learning project. Passwords use salted SHA-256; a production system should use a slow hash such as bcrypt or argon2 on a dedicated backend.
+
+### Backend setup
+
+1. Create two Google Sheets: a `Students` sheet with columns `id, studentId, fullName, email, phone, department, year, gender, password, createdAt`, and an `Admin` sheet with `email, password` columns.
+2. Open **Extensions → Apps Script**, paste `backend/Code.gs`, and set the spreadsheet IDs at the top.
+3. Run `migratePasswords()` once to hash any existing passwords.
+4. **Deploy → New deployment → Web app** (execute as you, access: anyone) and put the URL in `API_URL` in `js/store.js`.
 
 ---
 
@@ -149,8 +165,7 @@ Each student record contains:
 
 ## Possible Improvements
 
-- Hash passwords and verify student login server-side in Apps Script
-- Stop returning passwords from the students endpoint
+- Move to a slow password hash (bcrypt/argon2) on a dedicated backend
 - Add pagination for large student lists
 
 ## Browser Support

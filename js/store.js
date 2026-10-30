@@ -7,63 +7,65 @@ const API_URL =
   "https://script.google.com/macros/s/AKfycbyt0kdOEXeiwL4zj6bCfdmqA-qiUikKOfqxvuh5N9Y9rDzvrNkPiCougtY8vOs23R6j/exec";
 const SESSION_KEY  = "sreg_user";
 
+// ── API HELPER ───────────────────────────────────────
+// Every call is a POST with the session token attached. The backend checks
+// the token, so list / update / delete only work for a logged-in admin.
+async function api(action, payload = {}) {
+  const session = getSession();
+  let res;
+  try {
+    res = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({ ...payload, action, token: session?.token })
+    });
+  } catch {
+    throw new Error("Cannot reach the server. Check your connection.");
+  }
+
+  const out = await res.json();
+  if (!out.success) {
+    if (out.error === "Unauthorized") {
+      clearSession();
+      window.location.href = location.pathname.includes("/pages/") ? "../../index.html" : "index.html";
+      throw new Error("Session expired. Please sign in again.");
+    }
+    throw new Error(out.error || "Request failed.");
+  }
+  return out;
+}
+
 // ── STUDENTS ──────────────────────────────────────────
-async function getStudents() {
+// Public count for the login page (no personal data).
+async function getStudentCount() {
   const res = await fetch(API_URL);
-  return await res.json();
+  return (await res.json()).count;
+}
+
+// Admin only.
+async function getStudents() {
+  return (await api("list")).students;
 }
 
 async function addStudent(data) {
-  const students = await getStudents();
-
-  if (students.find(s => s.studentId === data.studentId)) {
-    throw new Error("Student ID already exists.");
-  }
-
-  const student = {
-    id: "stu_" + Date.now(),
-    ...data,
-    createdAt: new Date().toISOString()
-  };
-
- await fetch(API_URL, {
-  method: "POST",
-  body: JSON.stringify(student)
-});
-
-  return student;
+  return await api("register", { student: data });
 }
 
 async function updateStudent(id, data) {
-
- const res = await fetch(API_URL, {
-  method: "POST",
-  body: JSON.stringify({
-    action: "update",
-    id: id,
-    ...data
-  })
-});
-
-  return await res.json();
+  return await api("update", { id, ...data });
 }
 
 async function deleteStudent(id) {
-
-  const res = await fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "delete",
-      id: id
-    })
-  });
-
-  return await res.json();
+  return await api("delete", { id });
 }
 
+// Students get their own record; admins search the full list.
 async function findStudentByStudentId(studentId) {
+  const session = getSession();
+  if (session?.role === "student") {
+    return (await api("me")).student || null;
+  }
   const students = await getStudents();
-  return students.find(s => s.studentId === studentId) || null;
+  return students.find(s => String(s.studentId).toLowerCase() === String(studentId).toLowerCase()) || null;
 }
 
 // ── SESSION ──────────────────────────────────────────
